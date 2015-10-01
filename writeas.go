@@ -9,7 +9,7 @@ import (
 )
 
 const (
-	apiURL = "http://i.write.as"
+	apiURL = "https://write.as/api"
 )
 
 type API struct {
