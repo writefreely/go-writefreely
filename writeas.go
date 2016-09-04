@@ -1,9 +1,11 @@
 package writeas
 
 import (
+	"encoding/json"
 	"errors"
 	"fmt"
-	"io/ioutil"
+	"github.com/writeas/impart"
+	"io"
 	"net/http"
 	"time"
 )
@@ -12,37 +14,72 @@ const (
 	apiURL = "https://write.as/api"
 )
 
-type API struct {
-	BaseURL string
+type Client struct {
+	baseURL string
+
+	// Access token for the user making requests.
+	token string
+	// Client making requests to the API
+	client *http.Client
 }
 
 // defaultHTTPTimeout is the default http.Client timeout.
 const defaultHTTPTimeout = 10 * time.Second
 
-var httpClient = &http.Client{Timeout: defaultHTTPTimeout}
-
-func GetAPI() *API {
-	return &API{apiURL}
+func NewClient(token string) *Client {
+	return &Client{
+		token:   token,
+		client:  &http.Client{Timeout: defaultHTTPTimeout},
+		baseURL: apiURL,
+	}
 }
 
-func (a API) Call(method, path string) (int, string, error) {
+func (c *Client) get(path string, r interface{}) (*impart.Envelope, error) {
+	method := "GET"
 	if method != "GET" && method != "HEAD" {
-		return 0, "", errors.New(fmt.Sprintf("Method %s not currently supported by library (only HEAD and GET).\n", method))
+		return nil, errors.New(fmt.Sprintf("Method %s not currently supported by library (only HEAD and GET).\n", method))
 	}
 
-	r, _ := http.NewRequest(method, fmt.Sprintf("%s%s", a.BaseURL, path), nil)
-	r.Header.Add("User-Agent", "writeas-go v1")
+	return c.request(method, path, nil, r)
+}
 
-	resp, err := httpClient.Do(r)
+func (c *Client) post(path string, data io.Reader, r interface{}) (*impart.Envelope, error) {
+	return c.request("POST", path, data, r)
+}
+
+func (c *Client) request(method, path string, data io.Reader, result interface{}) (*impart.Envelope, error) {
+	url := fmt.Sprintf("%s%s", c.baseURL, path)
+	r, err := http.NewRequest(method, url, data)
 	if err != nil {
-		return 0, "", err
+		return nil, fmt.Errorf("Create request: %v", err)
+	}
+
+	c.prepareRequest(r)
+	resp, err := c.client.Do(r)
+	if err != nil {
+		return nil, fmt.Errorf("Request: %v", err)
 	}
 	defer resp.Body.Close()
 
-	content, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return resp.StatusCode, "", err
+	env := &impart.Envelope{
+		Code: resp.StatusCode,
+	}
+	if result != nil {
+		env.Data = result
 	}
 
-	return resp.StatusCode, string(content), nil
+	err = json.NewDecoder(resp.Body).Decode(&env)
+	if err != nil {
+		return nil, err
+	}
+
+	return env, nil
+}
+
+func (c *Client) prepareRequest(r *http.Request) {
+	r.Header.Add("User-Agent", "go-writeas v1")
+	r.Header.Add("Content-Type", "application/json")
+	if c.token != "" {
+		r.Header.Add("Authorization", "Token "+c.token)
+	}
 }
