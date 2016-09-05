@@ -89,7 +89,6 @@ func (c *Client) buildRequest(method, path string, data io.Reader) (*http.Reques
 }
 
 func (c *Client) doRequest(r *http.Request, result interface{}) (*impart.Envelope, error) {
-	fmt.Printf("%sing %s\n", "SOMETH", r.URL)
 	resp, err := c.client.Do(r)
 	if err != nil {
 		return nil, fmt.Errorf("Request: %v", err)
