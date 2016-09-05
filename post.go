@@ -95,7 +95,7 @@ func (c *Client) CreatePost(sp *PostParams) (*Post, error) {
 
 func (c *Client) UpdatePost(sp *PostParams) (*Post, error) {
 	p := &Post{}
-	env, err := c.post(fmt.Sprintf("/posts/%s", sp.ID), sp, p)
+	env, err := c.put(fmt.Sprintf("/posts/%s", sp.ID), sp, p)
 	if err != nil {
 		return nil, err
 	}

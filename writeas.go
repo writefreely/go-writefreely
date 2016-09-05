@@ -53,6 +53,12 @@ func (c *Client) post(path string, data, r interface{}) (*impart.Envelope, error
 	return c.request("POST", path, b, r)
 }
 
+func (c *Client) put(path string, data, r interface{}) (*impart.Envelope, error) {
+	b := new(bytes.Buffer)
+	json.NewEncoder(b).Encode(data)
+	return c.request("PUT", path, b, r)
+}
+
 func (c *Client) delete(path string, data map[string]string) (*impart.Envelope, error) {
 	r, err := c.buildRequest("DELETE", path, nil)
 	if err != nil {
