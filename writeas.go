@@ -27,12 +27,15 @@ type Client struct {
 // defaultHTTPTimeout is the default http.Client timeout.
 const defaultHTTPTimeout = 10 * time.Second
 
-func NewClient(token string) *Client {
+func NewClient() *Client {
 	return &Client{
-		token:   token,
 		client:  &http.Client{Timeout: defaultHTTPTimeout},
 		baseURL: apiURL,
 	}
+}
+
+func (c *Client) SetToken(token string) {
+	c.token = token
 }
 
 func (c *Client) get(path string, r interface{}) (*impart.Envelope, error) {

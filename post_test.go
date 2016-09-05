@@ -7,7 +7,7 @@ import (
 )
 
 func TestCreatePost(t *testing.T) {
-	wac := NewClient("")
+	wac := NewClient()
 	p, err := wac.CreatePost(&PostParams{
 		Title:   "Title!",
 		Content: "This is a post.",
@@ -21,7 +21,7 @@ func TestCreatePost(t *testing.T) {
 }
 
 func TestGetPost(t *testing.T) {
-	wac := NewClient("")
+	wac := NewClient()
 
 	res, err := wac.GetPost("zekk5r9apum6p")
 	if err != nil {
