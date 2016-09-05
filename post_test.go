@@ -19,10 +19,12 @@ func TestCreatePost(t *testing.T) {
 	}
 	t.Logf("Post created: %+v", p)
 
+	token := p.Token
+
 	// Update post
 	p, err = wac.UpdatePost(&PostParams{
 		ID:      p.ID,
-		Token:   p.Token,
+		Token:   token,
 		Content: "Now it's been updated!",
 	})
 	if err != nil {
@@ -30,6 +32,17 @@ func TestCreatePost(t *testing.T) {
 		return
 	}
 	t.Logf("Post updated: %+v", p)
+
+	// Delete post
+	err = wac.DeletePost(&PostParams{
+		ID:    p.ID,
+		Token: token,
+	})
+	if err != nil {
+		t.Errorf("Post delete failed: %v", err)
+		return
+	}
+	t.Logf("Post deleted!")
 }
 
 func TestGetPost(t *testing.T) {

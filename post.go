@@ -117,3 +117,22 @@ func (c *Client) UpdatePost(sp *PostParams) (*Post, error) {
 	}
 	return p, nil
 }
+
+func (c *Client) DeletePost(sp *PostParams) error {
+	env, err := c.delete(fmt.Sprintf("/posts/%s", sp.ID), map[string]string{
+		"token": sp.Token,
+	})
+	if err != nil {
+		return err
+	}
+
+	status := env.Code
+	if status == http.StatusOK {
+		return nil
+	} else if c.isNotLoggedIn(status) {
+		return fmt.Errorf("Not authenticated.")
+	} else if status == http.StatusBadRequest {
+		return fmt.Errorf("Bad request: %s", env.ErrorMessage)
+	}
+	return fmt.Errorf("Problem getting post: %s. %v\n", status, err)
+}

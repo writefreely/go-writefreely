@@ -53,14 +53,43 @@ func (c *Client) post(path string, data, r interface{}) (*impart.Envelope, error
 	return c.request("POST", path, b, r)
 }
 
+func (c *Client) delete(path string, data map[string]string) (*impart.Envelope, error) {
+	r, err := c.buildRequest("DELETE", path, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	q := r.URL.Query()
+	for k, v := range data {
+		q.Add(k, v)
+	}
+	r.URL.RawQuery = q.Encode()
+
+	return c.doRequest(r, nil)
+}
+
 func (c *Client) request(method, path string, data io.Reader, result interface{}) (*impart.Envelope, error) {
+	r, err := c.buildRequest(method, path, data)
+	if err != nil {
+		return nil, err
+	}
+
+	return c.doRequest(r, result)
+}
+
+func (c *Client) buildRequest(method, path string, data io.Reader) (*http.Request, error) {
 	url := fmt.Sprintf("%s%s", c.baseURL, path)
 	r, err := http.NewRequest(method, url, data)
 	if err != nil {
 		return nil, fmt.Errorf("Create request: %v", err)
 	}
-
 	c.prepareRequest(r)
+
+	return r, nil
+}
+
+func (c *Client) doRequest(r *http.Request, result interface{}) (*impart.Envelope, error) {
+	fmt.Printf("%sing %s\n", "SOMETH", r.URL)
 	resp, err := c.client.Do(r)
 	if err != nil {
 		return nil, fmt.Errorf("Request: %v", err)
@@ -72,11 +101,11 @@ func (c *Client) request(method, path string, data io.Reader, result interface{}
 	}
 	if result != nil {
 		env.Data = result
-	}
 
-	err = json.NewDecoder(resp.Body).Decode(&env)
-	if err != nil {
-		return nil, err
+		err = json.NewDecoder(resp.Body).Decode(&env)
+		if err != nil {
+			return nil, err
+		}
 	}
 
 	return env, nil
