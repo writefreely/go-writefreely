@@ -6,7 +6,21 @@ import (
 	"strings"
 )
 
-func TestGet(t *testing.T) {
+func TestCreatePost(t *testing.T) {
+	wac := NewClient("")
+	p, err := wac.CreatePost(&PostParams{
+		Title:   "Title!",
+		Content: "This is a post.",
+		Font:    "sans",
+	})
+	if err != nil {
+		t.Errorf("Post create failed: %v", err)
+	} else {
+		t.Logf("Post created: %+v", p)
+	}
+}
+
+func TestGetPost(t *testing.T) {
 	wac := NewClient("")
 
 	res, err := wac.GetPost("zekk5r9apum6p")

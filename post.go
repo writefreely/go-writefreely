@@ -28,8 +28,8 @@ type (
 		Collection *Collection `json:"collection,omitempty"`
 	}
 
-	// SubmittedPost represents a new post for publishing or updating.
-	SubmittedPost struct {
+	// PostParams holds values for creating or updating a post.
+	PostParams struct {
 		Title    string  `json:"title"`
 		Content  string  `json:"body"`
 		Font     string  `json:"font"`
@@ -59,6 +59,29 @@ func (c *Client) GetPost(id string) (*Post, error) {
 		return nil, fmt.Errorf("Post not found.")
 	} else if status == http.StatusGone {
 		return nil, fmt.Errorf("Post unpublished.")
+	} else {
+		return nil, fmt.Errorf("Problem getting post: %s. %v\n", status, err)
+	}
+	return p, nil
+}
+
+func (c *Client) CreatePost(sp *PostParams) (*Post, error) {
+	p := &Post{}
+	env, err := c.post("/posts", sp, p)
+	if err != nil {
+		return nil, err
+	}
+
+	var ok bool
+	if p, ok = env.Data.(*Post); !ok {
+		return nil, fmt.Errorf("Wrong data returned from API.")
+	}
+
+	status := env.Code
+	if status == http.StatusCreated {
+		return p, nil
+	} else if status == http.StatusBadRequest {
+		return nil, fmt.Errorf("Bad request: %s", env.ErrorMessage)
 	} else {
 		return nil, fmt.Errorf("Problem getting post: %s. %v\n", status, err)
 	}

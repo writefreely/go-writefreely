@@ -1,6 +1,7 @@
 package writeas
 
 import (
+	"bytes"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -43,8 +44,10 @@ func (c *Client) get(path string, r interface{}) (*impart.Envelope, error) {
 	return c.request(method, path, nil, r)
 }
 
-func (c *Client) post(path string, data io.Reader, r interface{}) (*impart.Envelope, error) {
-	return c.request("POST", path, data, r)
+func (c *Client) post(path string, data, r interface{}) (*impart.Envelope, error) {
+	b := new(bytes.Buffer)
+	json.NewEncoder(b).Encode(data)
+	return c.request("POST", path, b, r)
 }
 
 func (c *Client) request(method, path string, data io.Reader, result interface{}) (*impart.Envelope, error) {
