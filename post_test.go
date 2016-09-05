@@ -15,9 +15,21 @@ func TestCreatePost(t *testing.T) {
 	})
 	if err != nil {
 		t.Errorf("Post create failed: %v", err)
-	} else {
-		t.Logf("Post created: %+v", p)
+		return
 	}
+	t.Logf("Post created: %+v", p)
+
+	// Update post
+	p, err = wac.UpdatePost(&PostParams{
+		ID:      p.ID,
+		Token:   p.Token,
+		Content: "Now it's been updated!",
+	})
+	if err != nil {
+		t.Errorf("Post update failed: %v", err)
+		return
+	}
+	t.Logf("Post updated: %+v", p)
 }
 
 func TestGetPost(t *testing.T) {
