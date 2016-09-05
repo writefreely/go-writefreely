@@ -127,7 +127,7 @@ func (c *Client) DeletePost(sp *PostParams) error {
 	}
 
 	status := env.Code
-	if status == http.StatusOK {
+	if status == http.StatusNoContent {
 		return nil
 	} else if c.isNotLoggedIn(status) {
 		return fmt.Errorf("Not authenticated.")
