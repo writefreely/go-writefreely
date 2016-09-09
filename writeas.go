@@ -15,6 +15,8 @@ const (
 	apiURL = "https://write.as/api"
 )
 
+// Client is used to interact with the Write.as API. It can be used to make
+// authenticated or unauthenticated calls.
 type Client struct {
 	baseURL string
 
@@ -27,6 +29,11 @@ type Client struct {
 // defaultHTTPTimeout is the default http.Client timeout.
 const defaultHTTPTimeout = 10 * time.Second
 
+// NewClient creates a new API client. By default, all requests are made
+// unauthenticated. To optionally make authenticated requests, call `SetToken`.
+//
+//     c := writeas.NewClient()
+//     c.SetToken("00000000-0000-0000-0000-000000000000")
 func NewClient() *Client {
 	return &Client{
 		client:  &http.Client{Timeout: defaultHTTPTimeout},
@@ -34,6 +41,8 @@ func NewClient() *Client {
 	}
 }
 
+// SetToken sets the user token for all future Client requests. Setting this to
+// an empty string will change back to unauthenticated requests.
 func (c *Client) SetToken(token string) {
 	c.token = token
 }

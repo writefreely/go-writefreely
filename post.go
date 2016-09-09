@@ -30,7 +30,7 @@ type (
 
 	// PostParams holds values for creating or updating a post.
 	PostParams struct {
-		// Parameters only for creating
+		// Parameters only for updating
 		ID    string `json:"-"`
 		Token string `json:"token,omitempty"`
 
@@ -45,6 +45,9 @@ type (
 	}
 )
 
+// GetPost retrieves a published post, returning the Post and any error (in
+// user-friendly form) that occurs. See
+// https://writeas.github.io/docs/#retrieve-a-post.
 func (c *Client) GetPost(id string) (*Post, error) {
 	p := &Post{}
 	env, err := c.get(fmt.Sprintf("/posts/%s", id), p)
@@ -70,6 +73,8 @@ func (c *Client) GetPost(id string) (*Post, error) {
 	return p, nil
 }
 
+// CreatePost publishes a new post, returning a user-friendly error if one comes
+// up. See https://writeas.github.io/docs/#publish-a-post.
 func (c *Client) CreatePost(sp *PostParams) (*Post, error) {
 	p := &Post{}
 	env, err := c.post("/posts", sp, p)
@@ -93,6 +98,8 @@ func (c *Client) CreatePost(sp *PostParams) (*Post, error) {
 	return p, nil
 }
 
+// UpdatePost updates a published post with the given PostParams. See
+// https://writeas.github.io/docs/#update-a-post.
 func (c *Client) UpdatePost(sp *PostParams) (*Post, error) {
 	p := &Post{}
 	env, err := c.put(fmt.Sprintf("/posts/%s", sp.ID), sp, p)
@@ -118,6 +125,8 @@ func (c *Client) UpdatePost(sp *PostParams) (*Post, error) {
 	return p, nil
 }
 
+// DeletePost permanently deletes a published post. See
+// https://writeas.github.io/docs/#delete-a-post.
 func (c *Client) DeletePost(sp *PostParams) error {
 	env, err := c.delete(fmt.Sprintf("/posts/%s", sp.ID), map[string]string{
 		"token": sp.Token,
