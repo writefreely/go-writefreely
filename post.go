@@ -28,11 +28,16 @@ type (
 		Collection *Collection `json:"collection,omitempty"`
 	}
 
+	// OwnedPostParams are, together, fields only the original post author knows.
+	OwnedPostParams struct {
+		ID    string `json:"-"`
+		Token string `json:"token,omitempty"`
+	}
+
 	// PostParams holds values for creating or updating a post.
 	PostParams struct {
 		// Parameters only for updating
-		ID    string `json:"-"`
-		Token string `json:"token,omitempty"`
+		OwnedPostParams
 
 		// Parameters for creating or updating
 		Title    string  `json:"title,omitempty"`
@@ -42,6 +47,13 @@ type (
 		Language *string `json:"lang,omitempty"`
 
 		Crosspost []map[string]string `json:"crosspost,omitempty"`
+	}
+
+	ClaimPostResult struct {
+		ID           string `json:"id,omitempty"`
+		Code         int    `json:"code,omitempty"`
+		ErrorMessage string `json:"error_msg,omitempty"`
+		Post         *Post  `json:"post,omitempty"`
 	}
 )
 
@@ -144,4 +156,32 @@ func (c *Client) DeletePost(sp *PostParams) error {
 		return fmt.Errorf("Bad request: %s", env.ErrorMessage)
 	}
 	return fmt.Errorf("Problem getting post: %s. %v\n", status, err)
+}
+
+// ClaimPosts associates anonymous posts with a user / account.
+// https://writeas.github.io/docs/#claim-posts.
+func (c *Client) ClaimPosts(sp *[]OwnedPostParams) (*[]ClaimPostResult, error) {
+	p := &[]ClaimPostResult{}
+	env, err := c.put("/posts/claim", sp, p)
+	if err != nil {
+		return nil, err
+	}
+
+	var ok bool
+	if p, ok = env.Data.(*[]ClaimPostResult); !ok {
+		return nil, fmt.Errorf("Wrong data returned from API.")
+	}
+
+	status := env.Code
+	if status == http.StatusOK {
+		return p, nil
+	} else if c.isNotLoggedIn(status) {
+		return nil, fmt.Errorf("Not authenticated.")
+	} else if status == http.StatusBadRequest {
+		return nil, fmt.Errorf("Bad request: %s", env.ErrorMessage)
+	} else {
+		return nil, fmt.Errorf("Problem getting post: %s. %v\n", status, err)
+	}
+	// TODO: does this also happen with moving posts?
+	return p, nil
 }
