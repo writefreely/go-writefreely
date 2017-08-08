@@ -19,7 +19,7 @@ func TestGetCollection(t *testing.T) {
 	}
 }
 
-func ExampleGetCollection() {
+func ExampleClient_GetCollection() {
 	c := NewClient()
 	coll, err := c.GetCollection("blog")
 	if err != nil {
