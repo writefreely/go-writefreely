@@ -1,6 +1,7 @@
 package writeas
 
 import (
+	"fmt"
 	"testing"
 )
 
@@ -16,4 +17,14 @@ func TestGetCollection(t *testing.T) {
 			t.Errorf("Unexpected fetch results: %+v\n", res)
 		}
 	}
+}
+
+func ExampleGetCollection() {
+	c := NewClient()
+	coll, err := c.GetCollection("blog")
+	if err != nil {
+		fmt.Printf("%v", err)
+		return
+	}
+	fmt.Printf("%+v", coll)
 }
