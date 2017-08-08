@@ -1,3 +1,4 @@
+// Package writeas provides the binding for the Write.as API
 package writeas
 
 import (
