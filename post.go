@@ -49,6 +49,8 @@ type (
 		Crosspost []map[string]string `json:"crosspost,omitempty"`
 	}
 
+	// ClaimPostResult contains the post-specific result for a request to
+	// associate a post to an account.
 	ClaimPostResult struct {
 		ID           string `json:"id,omitempty"`
 		Code         int    `json:"code,omitempty"`
