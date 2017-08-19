@@ -4,7 +4,6 @@ package writeas
 import (
 	"bytes"
 	"encoding/json"
-	"errors"
 	"fmt"
 	"github.com/writeas/impart"
 	"io"
@@ -51,7 +50,7 @@ func (c *Client) SetToken(token string) {
 func (c *Client) get(path string, r interface{}) (*impart.Envelope, error) {
 	method := "GET"
 	if method != "GET" && method != "HEAD" {
-		return nil, errors.New(fmt.Sprintf("Method %s not currently supported by library (only HEAD and GET).\n", method))
+		return nil, fmt.Errorf("Method %s not currently supported by library (only HEAD and GET).\n", method)
 	}
 
 	return c.request(method, path, nil, r)
