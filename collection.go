@@ -30,7 +30,7 @@ type (
 
 // GetCollection retrieves a collection, returning the Collection and any error
 // (in user-friendly form) that occurs. See
-// https://writeas.github.io/docs/#retrieve-a-collection
+// https://developer.write.as/docs/api/#retrieve-a-collection
 func (c *Client) GetCollection(alias string) (*Collection, error) {
 	coll := &Collection{}
 	env, err := c.get(fmt.Sprintf("/collections/%s", alias), coll)
@@ -56,7 +56,7 @@ func (c *Client) GetCollection(alias string) (*Collection, error) {
 
 // CreateCollection creates a new collection, returning a user-friendly error
 // if one comes up. Requires a Write.as subscription. See
-// https://writeas.github.io/docs/#create-a-collection
+// https://developer.write.as/docs/api/#create-a-collection
 func (c *Client) CreateCollection(sp *CollectionParams) (*Collection, error) {
 	p := &Collection{}
 	env, err := c.post("/collections", sp, p)

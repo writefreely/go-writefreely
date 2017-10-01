@@ -12,7 +12,7 @@ go get github.com/writeas/go-writeas
 
 ## Documentation
 
-See all functionality and usages in the [API documentation](https://writeas.github.io/docs/).
+See all functionality and usages in the [API documentation](https://developer.write.as/docs/api/).
 
 ### Example usage
 
