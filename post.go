@@ -81,10 +81,8 @@ func (c *Client) GetPost(id string) (*Post, error) {
 		return nil, fmt.Errorf("Post not found.")
 	} else if status == http.StatusGone {
 		return nil, fmt.Errorf("Post unpublished.")
-	} else {
-		return nil, fmt.Errorf("Problem getting post: %s. %v\n", status, err)
 	}
-	return p, nil
+	return nil, fmt.Errorf("Problem getting post: %s. %v\n", status, err)
 }
 
 // CreatePost publishes a new post, returning a user-friendly error if one comes
@@ -133,10 +131,8 @@ func (c *Client) UpdatePost(sp *PostParams) (*Post, error) {
 		return nil, fmt.Errorf("Not authenticated.")
 	} else if status == http.StatusBadRequest {
 		return nil, fmt.Errorf("Bad request: %s", env.ErrorMessage)
-	} else {
-		return nil, fmt.Errorf("Problem getting post: %s. %v\n", status, err)
 	}
-	return p, nil
+	return nil, fmt.Errorf("Problem getting post: %s. %v\n", status, err)
 }
 
 // DeletePost permanently deletes a published post. See

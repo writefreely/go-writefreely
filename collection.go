@@ -80,8 +80,6 @@ func (c *Client) CreateCollection(sp *CollectionParams) (*Collection, error) {
 		return nil, fmt.Errorf("Collection name is already taken.")
 	} else if status == http.StatusPreconditionFailed {
 		return nil, fmt.Errorf("Reached max collection quota.")
-	} else {
-		return nil, fmt.Errorf("Problem getting post: %s. %v\n", status, err)
 	}
-	return p, nil
+	return nil, fmt.Errorf("Problem getting post: %s. %v\n", status, err)
 }
