@@ -47,6 +47,9 @@ type (
 		Language *string `json:"lang,omitempty"`
 
 		Crosspost []map[string]string `json:"crosspost,omitempty"`
+
+		// Parameters for collection posts
+		Collection string `json:"-"`
 	}
 
 	// ClaimPostResult contains the post-specific result for a request to
@@ -89,7 +92,11 @@ func (c *Client) GetPost(id string) (*Post, error) {
 // up. See https://developer.write.as/docs/api/#publish-a-post.
 func (c *Client) CreatePost(sp *PostParams) (*Post, error) {
 	p := &Post{}
-	env, err := c.post("/posts", sp, p)
+	endPre := ""
+	if sp.Collection != "" {
+		endPre = "/collections/" + sp.Collection
+	}
+	env, err := c.post(endPre+"/posts", sp, p)
 	if err != nil {
 		return nil, err
 	}
