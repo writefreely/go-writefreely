@@ -46,6 +46,7 @@ type (
 		IsRTL    *bool   `json:"rtl,omitempty"`
 		Language *string `json:"lang,omitempty"`
 
+		// Parameters only for creating
 		Crosspost []map[string]string `json:"crosspost,omitempty"`
 
 		// Parameters for collection posts
