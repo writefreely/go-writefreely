@@ -30,32 +30,6 @@ type (
 	}
 )
 
-// GetCollection retrieves a collection, returning the Collection and any error
-// (in user-friendly form) that occurs. See
-// https://developer.write.as/docs/api/#retrieve-a-collection
-func (c *Client) GetCollection(alias string) (*Collection, error) {
-	coll := &Collection{}
-	env, err := c.get(fmt.Sprintf("/collections/%s", alias), coll)
-	if err != nil {
-		return nil, err
-	}
-
-	var ok bool
-	if coll, ok = env.Data.(*Collection); !ok {
-		return nil, fmt.Errorf("Wrong data returned from API.")
-	}
-	status := env.Code
-
-	if status == http.StatusOK {
-		return coll, nil
-	} else if status == http.StatusNotFound {
-		return nil, fmt.Errorf("Collection not found.")
-	} else {
-		return nil, fmt.Errorf("Problem getting collection: %s. %v\n", status, err)
-	}
-	return coll, nil
-}
-
 // CreateCollection creates a new collection, returning a user-friendly error
 // if one comes up. Requires a Write.as subscription. See
 // https://developer.write.as/docs/api/#create-a-collection
@@ -84,6 +58,32 @@ func (c *Client) CreateCollection(sp *CollectionParams) (*Collection, error) {
 		return nil, fmt.Errorf("Reached max collection quota.")
 	}
 	return nil, fmt.Errorf("Problem getting post: %s. %v\n", status, err)
+}
+
+// GetCollection retrieves a collection, returning the Collection and any error
+// (in user-friendly form) that occurs. See
+// https://developer.write.as/docs/api/#retrieve-a-collection
+func (c *Client) GetCollection(alias string) (*Collection, error) {
+	coll := &Collection{}
+	env, err := c.get(fmt.Sprintf("/collections/%s", alias), coll)
+	if err != nil {
+		return nil, err
+	}
+
+	var ok bool
+	if coll, ok = env.Data.(*Collection); !ok {
+		return nil, fmt.Errorf("Wrong data returned from API.")
+	}
+	status := env.Code
+
+	if status == http.StatusOK {
+		return coll, nil
+	} else if status == http.StatusNotFound {
+		return nil, fmt.Errorf("Collection not found.")
+	} else {
+		return nil, fmt.Errorf("Problem getting collection: %s. %v\n", status, err)
+	}
+	return coll, nil
 }
 
 // GetCollectionPosts retrieves a collection's posts, returning the Posts
