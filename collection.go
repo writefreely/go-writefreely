@@ -19,6 +19,8 @@ type (
 		Email       string `json:"email,omitempty"`
 
 		TotalPosts int `json:"total_posts"`
+
+		Posts *[]Post `json:"posts,omitempty"`
 	}
 
 	// CollectionParams holds values for creating a collection.
@@ -82,4 +84,30 @@ func (c *Client) CreateCollection(sp *CollectionParams) (*Collection, error) {
 		return nil, fmt.Errorf("Reached max collection quota.")
 	}
 	return nil, fmt.Errorf("Problem getting post: %s. %v\n", status, err)
+}
+
+// GetCollectionPosts retrieves a collection's posts, returning the Posts
+// and any error (in user-friendly form) that occurs. See
+// https://developer.write.as/docs/api/#retrieve-collection-posts
+func (c *Client) GetCollectionPosts(alias string) (*[]Post, error) {
+	coll := &Collection{}
+	env, err := c.get(fmt.Sprintf("/collections/%s/posts", alias), coll)
+	if err != nil {
+		return nil, err
+	}
+
+	var ok bool
+	if coll, ok = env.Data.(*Collection); !ok {
+		return nil, fmt.Errorf("Wrong data returned from API.")
+	}
+	status := env.Code
+
+	if status == http.StatusOK {
+		return coll.Posts, nil
+	} else if status == http.StatusNotFound {
+		return nil, fmt.Errorf("Collection not found.")
+	} else {
+		return nil, fmt.Errorf("Problem getting collection: %s. %v\n", status, err)
+	}
+	return coll.Posts, nil
 }
