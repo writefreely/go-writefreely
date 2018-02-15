@@ -33,10 +33,13 @@ func main() {
 		// Perhaps show err.Error()
 	}
 
+	// Save token for later, since it won't ever be returned again
+	token := p.Token
+
 	// Update a published post
-	p, err := c.UpdatePost(&PostParams{
-		ID:      "3psnxyhqxy3hq",
-		Token:   "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+	p, err = c.UpdatePost(&PostParams{
+		ID:      p.ID,
+		Token:   token,
 		Content: "Now it's been updated!",
 	})
 	if err != nil {
@@ -44,15 +47,15 @@ func main() {
 	}
 
 	// Get a published post
-	p, err := c.GetPost("3psnxyhqxy3hq")
+	p, err = c.GetPost(p.ID)
 	if err != nil {
 		// handle
 	}
 
 	// Delete a post
-	err := c.DeletePost(&PostParams{
-		ID:    "3psnxyhqxy3hq",
-		Token: "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+	err = c.DeletePost(&PostParams{
+		ID:    p.ID,
+		Token: token,
 	})
 }
 ```
