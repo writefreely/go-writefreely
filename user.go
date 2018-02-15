@@ -18,5 +18,19 @@ type (
 		Username string    `json:"username"`
 		Email    string    `json:"email"`
 		Created  time.Time `json:"created"`
+
+		// Optional properties
+		Subscription *UserSubscription `json:"subscription"`
+	}
+
+	// UserSubscription contains information about a user's Write.as
+	// subscription.
+	UserSubscription struct {
+		Name       string    `json:"name"`
+		Begin      time.Time `json:"begin"`
+		End        time.Time `json:"end"`
+		AutoRenew  bool      `json:"auto_renew"`
+		Active     bool      `json:"is_active"`
+		Delinquent bool      `json:"is_delinquent"`
 	}
 )
