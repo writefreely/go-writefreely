@@ -3,6 +3,7 @@ package writeas
 import (
 	"testing"
 
+	"fmt"
 	"strings"
 )
 
@@ -70,4 +71,21 @@ func TestGetPost(t *testing.T) {
 			t.Errorf("Unexpected fetch results: %+v\n", res)
 		}
 	}
+}
+
+func ExampleClient_CreatePost() {
+	c := NewClient()
+
+	// Publish a post
+	p, err := c.CreatePost(&PostParams{
+		Title:   "Title!",
+		Content: "This is a post.",
+		Font:    "sans",
+	})
+	if err != nil {
+		fmt.Printf("Unable to create: %v", err)
+		return
+	}
+
+	fmt.Printf("%+v", p)
 }
