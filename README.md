@@ -65,7 +65,7 @@ func main() {
 The library covers our usage, but might not be comprehensive of the API. So we always welcome contributions and improvements from the community. Before sending pull requests, make sure you've done the following:
 
 * Run `go fmt` on all updated .go files.
-* Document all structs and funcs.
+* Document all exported structs and funcs.
 
 ## License
 
