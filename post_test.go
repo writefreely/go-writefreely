@@ -87,5 +87,6 @@ func ExampleClient_CreatePost() {
 		return
 	}
 
-	fmt.Printf("%+v", p)
+	fmt.Printf("%s", p.Content)
+	// Output: This is a post.
 }

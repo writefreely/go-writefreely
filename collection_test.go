@@ -39,5 +39,6 @@ func ExampleClient_GetCollection() {
 		fmt.Printf("%v", err)
 		return
 	}
-	fmt.Printf("%+v", coll)
+	fmt.Printf("%s", coll.Title)
+	// Output: write.as
 }
