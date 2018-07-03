@@ -83,7 +83,6 @@ func (c *Client) GetCollection(alias string) (*Collection, error) {
 	} else {
 		return nil, fmt.Errorf("Problem getting collection: %s. %v\n", status, err)
 	}
-	return coll, nil
 }
 
 // GetCollectionPosts retrieves a collection's posts, returning the Posts
@@ -109,5 +108,4 @@ func (c *Client) GetCollectionPosts(alias string) (*[]Post, error) {
 	} else {
 		return nil, fmt.Errorf("Problem getting collection: %s. %v\n", status, err)
 	}
-	return coll.Posts, nil
 }
