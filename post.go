@@ -86,7 +86,7 @@ func (c *Client) GetPost(id string) (*Post, error) {
 	} else if status == http.StatusGone {
 		return nil, fmt.Errorf("Post unpublished.")
 	}
-	return nil, fmt.Errorf("Problem getting post: %s. %v\n", status, err)
+	return nil, fmt.Errorf("Problem getting post: %d. %v\n", status, err)
 }
 
 // CreatePost publishes a new post, returning a user-friendly error if one comes
@@ -113,7 +113,7 @@ func (c *Client) CreatePost(sp *PostParams) (*Post, error) {
 	} else if status == http.StatusBadRequest {
 		return nil, fmt.Errorf("Bad request: %s", env.ErrorMessage)
 	} else {
-		return nil, fmt.Errorf("Problem getting post: %s. %v\n", status, err)
+		return nil, fmt.Errorf("Problem getting post: %d. %v\n", status, err)
 	}
 	return p, nil
 }
@@ -140,7 +140,7 @@ func (c *Client) UpdatePost(sp *PostParams) (*Post, error) {
 	} else if status == http.StatusBadRequest {
 		return nil, fmt.Errorf("Bad request: %s", env.ErrorMessage)
 	}
-	return nil, fmt.Errorf("Problem getting post: %s. %v\n", status, err)
+	return nil, fmt.Errorf("Problem getting post: %d. %v\n", status, err)
 }
 
 // DeletePost permanently deletes a published post. See
@@ -161,7 +161,7 @@ func (c *Client) DeletePost(sp *PostParams) error {
 	} else if status == http.StatusBadRequest {
 		return fmt.Errorf("Bad request: %s", env.ErrorMessage)
 	}
-	return fmt.Errorf("Problem getting post: %s. %v\n", status, err)
+	return fmt.Errorf("Problem getting post: %d. %v\n", status, err)
 }
 
 // ClaimPosts associates anonymous posts with a user / account.
@@ -186,7 +186,7 @@ func (c *Client) ClaimPosts(sp *[]OwnedPostParams) (*[]ClaimPostResult, error) {
 	} else if status == http.StatusBadRequest {
 		return nil, fmt.Errorf("Bad request: %s", env.ErrorMessage)
 	} else {
-		return nil, fmt.Errorf("Problem getting post: %s. %v\n", status, err)
+		return nil, fmt.Errorf("Problem getting post: %d. %v\n", status, err)
 	}
 	// TODO: does this also happen with moving posts?
 	return p, nil
