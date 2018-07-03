@@ -12,7 +12,8 @@ import (
 )
 
 const (
-	apiURL = "https://write.as/api"
+	apiURL    = "https://write.as/api"
+	devAPIURL = "https://development.write.as/api"
 )
 
 // Client is used to interact with the Write.as API. It can be used to make
@@ -38,6 +39,16 @@ func NewClient() *Client {
 	return &Client{
 		client:  &http.Client{Timeout: defaultHTTPTimeout},
 		baseURL: apiURL,
+	}
+}
+
+// NewDevClient creates a new API client for development and testing. It'll
+// communicate with our development servers, and SHOULD NOT be used in
+// production.
+func NewDevClient() *Client {
+	return &Client{
+		client:  &http.Client{Timeout: defaultHTTPTimeout},
+		baseURL: devAPIURL,
 	}
 }
 
