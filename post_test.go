@@ -51,9 +51,8 @@ func TestCreatePost(t *testing.T) {
 }
 
 func TestGetPost(t *testing.T) {
-	wac := NewClient()
-
-	res, err := wac.GetPost("zekk5r9apum6p")
+	dwac := NewDevClient()
+	res, err := dwac.GetPost("zekk5r9apum6p")
 	if err != nil {
 		t.Errorf("Unexpected fetch results: %+v, err: %v\n", res, err)
 	} else {
@@ -63,6 +62,7 @@ func TestGetPost(t *testing.T) {
 		}
 	}
 
+	wac := NewClient()
 	res, err = wac.GetPost("3psnxyhqxy3hq")
 	if err != nil {
 		t.Errorf("Unexpected fetch results: %+v, err: %v\n", res, err)
