@@ -115,7 +115,6 @@ func (c *Client) CreatePost(sp *PostParams) (*Post, error) {
 	} else {
 		return nil, fmt.Errorf("Problem getting post: %d. %v\n", status, err)
 	}
-	return p, nil
 }
 
 // UpdatePost updates a published post with the given PostParams. See
@@ -189,5 +188,4 @@ func (c *Client) ClaimPosts(sp *[]OwnedPostParams) (*[]ClaimPostResult, error) {
 		return nil, fmt.Errorf("Problem getting post: %d. %v\n", status, err)
 	}
 	// TODO: does this also happen with moving posts?
-	return p, nil
 }
