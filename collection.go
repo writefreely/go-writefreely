@@ -57,7 +57,7 @@ func (c *Client) CreateCollection(sp *CollectionParams) (*Collection, error) {
 	} else if status == http.StatusPreconditionFailed {
 		return nil, fmt.Errorf("Reached max collection quota.")
 	}
-	return nil, fmt.Errorf("Problem getting post: %s. %v\n", status, err)
+	return nil, fmt.Errorf("Problem getting post: %d. %v\n", status, err)
 }
 
 // GetCollection retrieves a collection, returning the Collection and any error
@@ -81,7 +81,7 @@ func (c *Client) GetCollection(alias string) (*Collection, error) {
 	} else if status == http.StatusNotFound {
 		return nil, fmt.Errorf("Collection not found.")
 	} else {
-		return nil, fmt.Errorf("Problem getting collection: %s. %v\n", status, err)
+		return nil, fmt.Errorf("Problem getting collection: %d. %v\n", status, err)
 	}
 	return coll, nil
 }
@@ -107,7 +107,7 @@ func (c *Client) GetCollectionPosts(alias string) (*[]Post, error) {
 	} else if status == http.StatusNotFound {
 		return nil, fmt.Errorf("Collection not found.")
 	} else {
-		return nil, fmt.Errorf("Problem getting collection: %s. %v\n", status, err)
+		return nil, fmt.Errorf("Problem getting collection: %d. %v\n", status, err)
 	}
 	return coll.Posts, nil
 }
