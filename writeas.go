@@ -3,6 +3,7 @@ package writeas
 
 import (
 	"bytes"
+	"code.as/core/socks"
 	"encoding/json"
 	"fmt"
 	"github.com/writeas/impart"
@@ -14,6 +15,7 @@ import (
 const (
 	apiURL    = "https://write.as/api"
 	devAPIURL = "https://development.write.as/api"
+	torAPIURL = "http://writeas7pm7rcdqg.onion/api"
 )
 
 // Client is used to interact with the Write.as API. It can be used to make
@@ -39,6 +41,18 @@ func NewClient() *Client {
 	return &Client{
 		client:  &http.Client{Timeout: defaultHTTPTimeout},
 		baseURL: apiURL,
+	}
+}
+
+// NewTorClient creates a new API client for communicating with the Write.as
+// Tor hidden service, using the given port to connect to the local SOCKS
+// proxy.
+func NewTorClient(port int) *Client {
+	dialSocksProxy := socks.DialSocksProxy(socks.SOCKS5, fmt.Sprintf("127.0.0.1:%d", port))
+	transport := &http.Transport{Dial: dialSocksProxy}
+	return &Client{
+		client:  &http.Client{Transport: transport},
+		baseURL: torAPIURL,
 	}
 }
 
