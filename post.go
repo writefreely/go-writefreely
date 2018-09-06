@@ -37,7 +37,8 @@ type (
 	// PostParams holds values for creating or updating a post.
 	PostParams struct {
 		// Parameters only for updating
-		OwnedPostParams
+		ID    string `json:"-"`
+		Token string `json:"token,omitempty"`
 
 		// Parameters for creating or updating
 		Title    string  `json:"title,omitempty"`
