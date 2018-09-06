@@ -27,6 +27,9 @@ type Client struct {
 	token string
 	// Client making requests to the API
 	client *http.Client
+
+	// UserAgent overrides the default User-Agent header
+	UserAgent string
 }
 
 // defaultHTTPTimeout is the default http.Client timeout.
@@ -151,7 +154,11 @@ func (c *Client) doRequest(r *http.Request, result interface{}) (*impart.Envelop
 }
 
 func (c *Client) prepareRequest(r *http.Request) {
-	r.Header.Add("User-Agent", "go-writeas v1")
+	ua := c.UserAgent
+	if ua == "" {
+		ua = "go-writeas v1"
+	}
+	r.Header.Add("User-Agent", ua)
 	r.Header.Add("Content-Type", "application/json")
 	if c.token != "" {
 		r.Header.Add("Authorization", "Token "+c.token)
