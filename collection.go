@@ -17,6 +17,7 @@ type (
 		Views       int64  `json:"views"`
 		Domain      string `json:"domain,omitempty"`
 		Email       string `json:"email,omitempty"`
+		URL         string `json:"url,omitempty"`
 
 		TotalPosts int `json:"total_posts"`
 
