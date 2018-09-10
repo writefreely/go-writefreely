@@ -75,6 +75,11 @@ func (c *Client) SetToken(token string) {
 	c.token = token
 }
 
+// Token returns the user token currently set to the Client.
+func (c *Client) Token() string {
+	return c.token
+}
+
 func (c *Client) get(path string, r interface{}) (*impart.Envelope, error) {
 	method := "GET"
 	if method != "GET" && method != "HEAD" {
