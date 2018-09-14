@@ -190,3 +190,27 @@ func (c *Client) ClaimPosts(sp *[]OwnedPostParams) (*[]ClaimPostResult, error) {
 	}
 	// TODO: does this also happen with moving posts?
 }
+
+// GetUserPosts retrieves the authenticated user's posts.
+// See https://developers.write.as/docs/api/#retrieve-user-39-s-posts
+func (c *Client) GetUserPosts() (*[]Post, error) {
+	p := &[]Post{}
+	env, err := c.get("/me/posts", p)
+	if err != nil {
+		return nil, err
+	}
+
+	var ok bool
+	if p, ok = env.Data.(*[]Post); !ok {
+		return nil, fmt.Errorf("Wrong data returned from API.")
+	}
+	status := env.Code
+
+	if status != http.StatusOK {
+		if c.isNotLoggedIn(status) {
+			return nil, fmt.Errorf("Not authenticated.")
+		}
+		return nil, fmt.Errorf("Problem getting posts: %d. %v\n", status, err)
+	}
+	return p, nil
+}
