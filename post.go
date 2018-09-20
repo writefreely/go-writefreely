@@ -55,6 +55,20 @@ type (
 		Collection string `json:"-"`
 	}
 
+	// PinnedPostParams holds values for pinning a post
+	PinnedPostParams struct {
+		ID       string `json:"id"`
+		Position int    `json:"position"`
+	}
+
+	// BatchPostResult contains the post-specific result as part of a larger
+	// batch operation.
+	BatchPostResult struct {
+		ID           string `json:"id,omitempty"`
+		Code         int    `json:"code,omitempty"`
+		ErrorMessage string `json:"error_msg,omitempty"`
+	}
+
 	// ClaimPostResult contains the post-specific result for a request to
 	// associate a post to an account.
 	ClaimPostResult struct {
@@ -214,4 +228,39 @@ func (c *Client) GetUserPosts() (*[]Post, error) {
 		return nil, fmt.Errorf("Problem getting posts: %d. %v\n", status, err)
 	}
 	return p, nil
+}
+
+// PinPost pins a post in the given collection.
+// See https://developers.write.as/docs/api/#pin-a-post-to-a-collection
+func (c *Client) PinPost(alias string, pp *PinnedPostParams) error {
+	res := &[]BatchPostResult{}
+	env, err := c.post(fmt.Sprintf("/collections/%s/pin", alias), []*PinnedPostParams{pp}, res)
+	if err != nil {
+		return err
+	}
+
+	var ok bool
+	if res, ok = env.Data.(*[]BatchPostResult); !ok {
+		return fmt.Errorf("Wrong data returned from API.")
+	}
+
+	// Check for basic request errors on top level response
+	status := env.Code
+	if status != http.StatusOK {
+		if c.isNotLoggedIn(status) {
+			return fmt.Errorf("Not authenticated.")
+		}
+		return fmt.Errorf("Problem pinning post: %d. %v\n", status, err)
+	}
+
+	// Check the individual post result
+	if len(*res) == 0 || len(*res) > 1 {
+		return fmt.Errorf("Wrong data returned from API.")
+	}
+	if (*res)[0].Code != http.StatusOK {
+		return fmt.Errorf("Problem pinning post: %d", (*res)[0].Code)
+		// TODO: return ErrorMessage (right now it'll be empty)
+		// return fmt.Errorf("Problem pinning post: %v", res[0].ErrorMessage)
+	}
+	return nil
 }
