@@ -29,6 +29,7 @@ func (c *Client) LogIn(username, pass string) (*AuthUser, error) {
 
 	status := env.Code
 	if status == http.StatusOK {
+		c.SetToken(u.AccessToken)
 		return u, nil
 	} else if status == http.StatusBadRequest {
 		return nil, fmt.Errorf("Bad request: %s", env.ErrorMessage)
