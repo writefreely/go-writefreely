@@ -18,6 +18,7 @@ type (
 		RTL       *bool     `json:"rtl"`
 		Listed    bool      `json:"listed"`
 		Created   time.Time `json:"created"`
+		Updated   time.Time `json:"updated"`
 		Title     string    `json:"title"`
 		Content   string    `json:"body"`
 		Views     int64     `json:"views"`
