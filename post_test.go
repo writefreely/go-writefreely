@@ -87,6 +87,20 @@ func TestPinPost(t *testing.T) {
 	}
 }
 
+func TestUnpinPost(t *testing.T) {
+	dwac := NewDevClient()
+	_, err := dwac.LogIn("demo", "demo")
+	if err != nil {
+		t.Fatalf("Unable to log in: %v", err)
+	}
+	defer dwac.LogOut()
+
+	err = dwac.UnpinPost("tester", &PinnedPostParams{ID: "olx6uk7064heqltf"})
+	if err != nil {
+		t.Fatalf("Unpin failed: %v", err)
+	}
+}
+
 func ExampleClient_CreatePost() {
 	c := NewClient()
 
