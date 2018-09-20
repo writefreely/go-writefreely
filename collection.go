@@ -110,3 +110,27 @@ func (c *Client) GetCollectionPosts(alias string) (*[]Post, error) {
 		return nil, fmt.Errorf("Problem getting collection: %d. %v\n", status, err)
 	}
 }
+
+// GetUserCollections retrieves the authenticated user's collections.
+// See https://developers.write.as/docs/api/#retrieve-user-39-s-collections
+func (c *Client) GetUserCollections() (*[]Collection, error) {
+	colls := &[]Collection{}
+	env, err := c.get("/me/collections", colls)
+	if err != nil {
+		return nil, err
+	}
+
+	var ok bool
+	if colls, ok = env.Data.(*[]Collection); !ok {
+		return nil, fmt.Errorf("Wrong data returned from API.")
+	}
+	status := env.Code
+
+	if status != http.StatusOK {
+		if c.isNotLoggedIn(status) {
+			return nil, fmt.Errorf("Not authenticated.")
+		}
+		return nil, fmt.Errorf("Problem getting collections: %d. %v\n", status, err)
+	}
+	return colls, nil
+}
