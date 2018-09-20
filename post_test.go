@@ -24,10 +24,8 @@ func TestCreatePost(t *testing.T) {
 
 	// Update post
 	p, err = wac.UpdatePost(&PostParams{
-		OwnedPostParams: OwnedPostParams{
-			ID:    p.ID,
-			Token: token,
-		},
+		ID:      p.ID,
+		Token:   token,
 		Content: "Now it's been updated!",
 	})
 	if err != nil {
@@ -38,10 +36,8 @@ func TestCreatePost(t *testing.T) {
 
 	// Delete post
 	err = wac.DeletePost(&PostParams{
-		OwnedPostParams: OwnedPostParams{
-			ID:    p.ID,
-			Token: token,
-		},
+		ID:    p.ID,
+		Token: token,
 	})
 	if err != nil {
 		t.Errorf("Post delete failed: %v", err)
