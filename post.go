@@ -148,14 +148,15 @@ func (c *Client) UpdatePost(sp *PostParams) (*Post, error) {
 	}
 
 	status := env.Code
-	if status == http.StatusOK {
-		return p, nil
-	} else if c.isNotLoggedIn(status) {
-		return nil, fmt.Errorf("Not authenticated.")
-	} else if status == http.StatusBadRequest {
-		return nil, fmt.Errorf("Bad request: %s", env.ErrorMessage)
+	if status != http.StatusOK {
+		if c.isNotLoggedIn(status) {
+			return nil, fmt.Errorf("Not authenticated.")
+		} else if status == http.StatusBadRequest {
+			return nil, fmt.Errorf("Bad request: %s", env.ErrorMessage)
+		}
+		return nil, fmt.Errorf("Problem getting post: %d. %v\n", status, err)
 	}
-	return nil, fmt.Errorf("Problem getting post: %d. %v\n", status, err)
+	return p, nil
 }
 
 // DeletePost permanently deletes a published post. See
