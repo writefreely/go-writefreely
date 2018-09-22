@@ -47,18 +47,19 @@ func (c *Client) CreateCollection(sp *CollectionParams) (*Collection, error) {
 	}
 
 	status := env.Code
-	if status == http.StatusCreated {
-		return p, nil
-	} else if status == http.StatusBadRequest {
-		return nil, fmt.Errorf("Bad request: %s", env.ErrorMessage)
-	} else if status == http.StatusForbidden {
-		return nil, fmt.Errorf("Casual or Pro user required.")
-	} else if status == http.StatusConflict {
-		return nil, fmt.Errorf("Collection name is already taken.")
-	} else if status == http.StatusPreconditionFailed {
-		return nil, fmt.Errorf("Reached max collection quota.")
+	if status != http.StatusCreated {
+		if status == http.StatusBadRequest {
+			return nil, fmt.Errorf("Bad request: %s", env.ErrorMessage)
+		} else if status == http.StatusForbidden {
+			return nil, fmt.Errorf("Casual or Pro user required.")
+		} else if status == http.StatusConflict {
+			return nil, fmt.Errorf("Collection name is already taken.")
+		} else if status == http.StatusPreconditionFailed {
+			return nil, fmt.Errorf("Reached max collection quota.")
+		}
+		return nil, fmt.Errorf("Problem getting post: %d. %v\n", status, err)
 	}
-	return nil, fmt.Errorf("Problem getting post: %d. %v\n", status, err)
+	return p, nil
 }
 
 // GetCollection retrieves a collection, returning the Collection and any error
