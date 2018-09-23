@@ -24,7 +24,7 @@ func main() {
 	c := writeas.NewClient()
 
 	// Publish a post
-	p, err := c.CreatePost(&PostParams{
+	p, err := c.CreatePost(&writeas.PostParams{
 		Title:   "Title!",
 		Content: "This is a post.",
 		Font:    "sans",
@@ -37,9 +37,11 @@ func main() {
 	token := p.Token
 
 	// Update a published post
-	p, err = c.UpdatePost(&PostParams{
-		ID:      p.ID,
-		Token:   token,
+	p, err = c.UpdatePost(&writeas.PostParams{
+		OwnedPostParams: writeas.OwnedPostParams{
+			ID:    p.ID,
+			Token: token,
+		},
 		Content: "Now it's been updated!",
 	})
 	if err != nil {
@@ -53,9 +55,11 @@ func main() {
 	}
 
 	// Delete a post
-	err = c.DeletePost(&PostParams{
-		ID:    p.ID,
-		Token: token,
+	err = c.DeletePost(&writeas.PostParams{
+		OwnedPostParams: writeas.OwnedPostParams{
+			ID:    p.ID,
+			Token: token,
+		},
 	})
 }
 ```
