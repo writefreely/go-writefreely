@@ -6,6 +6,10 @@ Official Write.as Go client library.
 
 ## Installation
 
+**Warning**: the `v2` branch is under heavy development and its API will change without notice.
+
+For a stable API, use `go.code.as/writeas.v1` and upgrade to `v2` once everything is merged into `master`.
+
 ```bash
 go get go.code.as/writeas.v2
 ```
