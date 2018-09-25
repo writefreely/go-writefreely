@@ -129,7 +129,7 @@ func (c *Client) CreatePost(sp *PostParams) (*Post, error) {
 	} else if status == http.StatusBadRequest {
 		return nil, fmt.Errorf("Bad request: %s", env.ErrorMessage)
 	} else {
-		return nil, fmt.Errorf("Problem getting post: %d. %v\n", status, err)
+		return nil, fmt.Errorf("Problem creating post: %d. %v\n", status, err)
 	}
 }
 
@@ -154,7 +154,7 @@ func (c *Client) UpdatePost(sp *PostParams) (*Post, error) {
 		} else if status == http.StatusBadRequest {
 			return nil, fmt.Errorf("Bad request: %s", env.ErrorMessage)
 		}
-		return nil, fmt.Errorf("Problem getting post: %d. %v\n", status, err)
+		return nil, fmt.Errorf("Problem updating post: %d. %v\n", status, err)
 	}
 	return p, nil
 }
@@ -177,7 +177,7 @@ func (c *Client) DeletePost(sp *PostParams) error {
 	} else if status == http.StatusBadRequest {
 		return fmt.Errorf("Bad request: %s", env.ErrorMessage)
 	}
-	return fmt.Errorf("Problem getting post: %d. %v\n", status, err)
+	return fmt.Errorf("Problem deleting post: %d. %v\n", status, err)
 }
 
 // ClaimPosts associates anonymous posts with a user / account.
@@ -202,7 +202,7 @@ func (c *Client) ClaimPosts(sp *[]OwnedPostParams) (*[]ClaimPostResult, error) {
 	} else if status == http.StatusBadRequest {
 		return nil, fmt.Errorf("Bad request: %s", env.ErrorMessage)
 	} else {
-		return nil, fmt.Errorf("Problem getting post: %d. %v\n", status, err)
+		return nil, fmt.Errorf("Problem claiming post: %d. %v\n", status, err)
 	}
 	// TODO: does this also happen with moving posts?
 }
@@ -226,7 +226,7 @@ func (c *Client) GetUserPosts() (*[]Post, error) {
 		if c.isNotLoggedIn(status) {
 			return nil, fmt.Errorf("Not authenticated.")
 		}
-		return nil, fmt.Errorf("Problem getting posts: %d. %v\n", status, err)
+		return nil, fmt.Errorf("Problem getting user posts: %d. %v\n", status, err)
 	}
 	return p, nil
 }
