@@ -124,13 +124,13 @@ func (c *Client) CreatePost(sp *PostParams) (*Post, error) {
 	}
 
 	status := env.Code
-	if status == http.StatusCreated {
-		return p, nil
-	} else if status == http.StatusBadRequest {
-		return nil, fmt.Errorf("Bad request: %s", env.ErrorMessage)
-	} else {
+	if status != http.StatusCreated {
+		if status == http.StatusBadRequest {
+			return nil, fmt.Errorf("Bad request: %s", env.ErrorMessage)
+		}
 		return nil, fmt.Errorf("Problem creating post: %d. %v\n", status, err)
 	}
+	return p, nil
 }
 
 // UpdatePost updates a published post with the given PostParams. See
