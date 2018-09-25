@@ -102,7 +102,7 @@ func (c *Client) GetPost(id string) (*Post, error) {
 	} else if status == http.StatusGone {
 		return nil, fmt.Errorf("Post unpublished.")
 	}
-	return nil, fmt.Errorf("Problem getting post: %d. %v\n", status, err)
+	return nil, fmt.Errorf("Problem getting post: %d. %s\n", status, env.ErrorMessage)
 }
 
 // CreatePost publishes a new post, returning a user-friendly error if one comes
@@ -128,7 +128,7 @@ func (c *Client) CreatePost(sp *PostParams) (*Post, error) {
 		if status == http.StatusBadRequest {
 			return nil, fmt.Errorf("Bad request: %s", env.ErrorMessage)
 		}
-		return nil, fmt.Errorf("Problem creating post: %d. %v\n", status, err)
+		return nil, fmt.Errorf("Problem creating post: %d. %s\n", status, env.ErrorMessage)
 	}
 	return p, nil
 }
@@ -154,7 +154,7 @@ func (c *Client) UpdatePost(sp *PostParams) (*Post, error) {
 		} else if status == http.StatusBadRequest {
 			return nil, fmt.Errorf("Bad request: %s", env.ErrorMessage)
 		}
-		return nil, fmt.Errorf("Problem updating post: %d. %v\n", status, err)
+		return nil, fmt.Errorf("Problem updating post: %d. %s\n", status, env.ErrorMessage)
 	}
 	return p, nil
 }
@@ -177,7 +177,7 @@ func (c *Client) DeletePost(sp *PostParams) error {
 	} else if status == http.StatusBadRequest {
 		return fmt.Errorf("Bad request: %s", env.ErrorMessage)
 	}
-	return fmt.Errorf("Problem deleting post: %d. %v\n", status, err)
+	return fmt.Errorf("Problem deleting post: %d. %s\n", status, env.ErrorMessage)
 }
 
 // ClaimPosts associates anonymous posts with a user / account.
@@ -202,7 +202,7 @@ func (c *Client) ClaimPosts(sp *[]OwnedPostParams) (*[]ClaimPostResult, error) {
 	} else if status == http.StatusBadRequest {
 		return nil, fmt.Errorf("Bad request: %s", env.ErrorMessage)
 	} else {
-		return nil, fmt.Errorf("Problem claiming post: %d. %v\n", status, err)
+		return nil, fmt.Errorf("Problem claiming post: %d. %s\n", status, env.ErrorMessage)
 	}
 	// TODO: does this also happen with moving posts?
 }
@@ -226,7 +226,7 @@ func (c *Client) GetUserPosts() (*[]Post, error) {
 		if c.isNotLoggedIn(status) {
 			return nil, fmt.Errorf("Not authenticated.")
 		}
-		return nil, fmt.Errorf("Problem getting user posts: %d. %v\n", status, err)
+		return nil, fmt.Errorf("Problem getting user posts: %d. %s\n", status, env.ErrorMessage)
 	}
 	return p, nil
 }
@@ -251,7 +251,7 @@ func (c *Client) PinPost(alias string, pp *PinnedPostParams) error {
 		if c.isNotLoggedIn(status) {
 			return fmt.Errorf("Not authenticated.")
 		}
-		return fmt.Errorf("Problem pinning post: %d. %v\n", status, err)
+		return fmt.Errorf("Problem pinning post: %d. %s\n", status, env.ErrorMessage)
 	}
 
 	// Check the individual post result
@@ -261,7 +261,7 @@ func (c *Client) PinPost(alias string, pp *PinnedPostParams) error {
 	if (*res)[0].Code != http.StatusOK {
 		return fmt.Errorf("Problem pinning post: %d", (*res)[0].Code)
 		// TODO: return ErrorMessage (right now it'll be empty)
-		// return fmt.Errorf("Problem pinning post: %v", res[0].ErrorMessage)
+		// return fmt.Errorf("Problem pinning post: %s", res[0].ErrorMessage)
 	}
 	return nil
 }
@@ -286,7 +286,7 @@ func (c *Client) UnpinPost(alias string, pp *PinnedPostParams) error {
 		if c.isNotLoggedIn(status) {
 			return fmt.Errorf("Not authenticated.")
 		}
-		return fmt.Errorf("Problem unpinning post: %d. %v\n", status, err)
+		return fmt.Errorf("Problem unpinning post: %d. %s\n", status, env.ErrorMessage)
 	}
 
 	// Check the individual post result
@@ -296,7 +296,7 @@ func (c *Client) UnpinPost(alias string, pp *PinnedPostParams) error {
 	if (*res)[0].Code != http.StatusOK {
 		return fmt.Errorf("Problem unpinning post: %d", (*res)[0].Code)
 		// TODO: return ErrorMessage (right now it'll be empty)
-		// return fmt.Errorf("Problem unpinning post: %v", res[0].ErrorMessage)
+		// return fmt.Errorf("Problem unpinning post: %s", res[0].ErrorMessage)
 	}
 	return nil
 }
