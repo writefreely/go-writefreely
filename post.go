@@ -135,9 +135,19 @@ func (c *Client) CreatePost(sp *PostParams) (*Post, error) {
 
 // UpdatePost updates a published post with the given PostParams. See
 // https://developer.write.as/docs/api/#update-a-post.
-func (c *Client) UpdatePost(sp *PostParams) (*Post, error) {
+func (c *Client) UpdatePost(id, token string, sp *PostParams) (*Post, error) {
+	return c.updatePost("", id, token, sp)
+}
+
+func (c *Client) updatePost(collection, identifier, token string, sp *PostParams) (*Post, error) {
 	p := &Post{}
-	env, err := c.put(fmt.Sprintf("/posts/%s", sp.ID), sp, p)
+	endpoint := "/posts/" + identifier
+	/*
+		if collection != "" {
+			endpoint = "/collections/" + collection + endpoint
+		}
+	*/
+	env, err := c.put(endpoint, sp, p)
 	if err != nil {
 		return nil, err
 	}
@@ -161,10 +171,22 @@ func (c *Client) UpdatePost(sp *PostParams) (*Post, error) {
 
 // DeletePost permanently deletes a published post. See
 // https://developer.write.as/docs/api/#delete-a-post.
-func (c *Client) DeletePost(sp *PostParams) error {
-	env, err := c.delete(fmt.Sprintf("/posts/%s", sp.ID), map[string]string{
-		"token": sp.Token,
-	})
+func (c *Client) DeletePost(id, token string) error {
+	return c.deletePost("", id, token)
+}
+
+func (c *Client) deletePost(collection, identifier, token string) error {
+	p := map[string]string{}
+	endpoint := "/posts/" + identifier
+	/*
+		if collection != "" {
+			endpoint = "/collections/" + collection + endpoint
+		} else {
+			p["token"] = token
+		}
+	*/
+	p["token"] = token
+	env, err := c.delete(endpoint, p)
 	if err != nil {
 		return err
 	}
