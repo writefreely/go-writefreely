@@ -145,8 +145,11 @@ func (c *Client) updatePost(collection, identifier, token string, sp *PostParams
 	/*
 		if collection != "" {
 			endpoint = "/collections/" + collection + endpoint
+		} else {
+			sp.Token = token
 		}
 	*/
+	sp.Token = token
 	env, err := c.put(endpoint, sp, p)
 	if err != nil {
 		return nil, err
