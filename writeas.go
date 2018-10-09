@@ -16,6 +16,9 @@ const (
 	apiURL    = "https://write.as/api"
 	devAPIURL = "https://development.write.as/api"
 	torAPIURL = "http://writeas7pm7rcdqg.onion/api"
+
+	// Current go-writeas version
+	Version = "2-dev"
 )
 
 // Client is used to interact with the Write.as API. It can be used to make
@@ -161,7 +164,7 @@ func (c *Client) doRequest(r *http.Request, result interface{}) (*impart.Envelop
 func (c *Client) prepareRequest(r *http.Request) {
 	ua := c.UserAgent
 	if ua == "" {
-		ua = "go-writeas v1"
+		ua = "go-writeas v" + Version
 	}
 	r.Header.Add("User-Agent", ua)
 	r.Header.Add("Content-Type", "application/json")
