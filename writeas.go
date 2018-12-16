@@ -44,31 +44,55 @@ const defaultHTTPTimeout = 10 * time.Second
 //     c := writeas.NewClient()
 //     c.SetToken("00000000-0000-0000-0000-000000000000")
 func NewClient() *Client {
-	return &Client{
-		client:  &http.Client{Timeout: defaultHTTPTimeout},
-		baseURL: apiURL,
-	}
+	return NewClientWith(Config{URL: apiURL})
 }
 
 // NewTorClient creates a new API client for communicating with the Write.as
 // Tor hidden service, using the given port to connect to the local SOCKS
 // proxy.
 func NewTorClient(port int) *Client {
-	dialSocksProxy := socks.DialSocksProxy(socks.SOCKS5, fmt.Sprintf("127.0.0.1:%d", port))
-	transport := &http.Transport{Dial: dialSocksProxy}
-	return &Client{
-		client:  &http.Client{Transport: transport},
-		baseURL: torAPIURL,
-	}
+	return NewClientWith(Config{URL: torAPIURL, TorPort: port})
 }
 
 // NewDevClient creates a new API client for development and testing. It'll
 // communicate with our development servers, and SHOULD NOT be used in
 // production.
 func NewDevClient() *Client {
+	return NewClientWith(Config{URL: devAPIURL})
+}
+
+// Config configures a Write.as client.
+type Config struct {
+	// URL of the Write.as API service. Defaults to https://write.as/api.
+	URL string
+
+	// If specified, the API client will communicate with the Write.as Tor
+	// hidden service using the provided port to connect to the local SOCKS
+	// proxy.
+	TorPort int
+
+	// If specified, requests will be authenticated using this user token.
+	// This may be provided after making a few anonymous requests with
+	// SetToken.
+	Token string
+}
+
+// NewClientWith builds a new API client with the provided configuration.
+func NewClientWith(c Config) *Client {
+	if c.URL == "" {
+		c.URL = apiURL
+	}
+
+	httpClient := &http.Client{Timeout: defaultHTTPTimeout}
+	if c.TorPort > 0 {
+		dialSocksProxy := socks.DialSocksProxy(socks.SOCKS5, fmt.Sprintf("127.0.0.1:%d", c.TorPort))
+		httpClient.Transport = &http.Transport{Dial: dialSocksProxy}
+	}
+
 	return &Client{
-		client:  &http.Client{Timeout: defaultHTTPTimeout},
-		baseURL: devAPIURL,
+		client:  httpClient,
+		baseURL: c.URL,
+		token:   c.Token,
 	}
 }
 
