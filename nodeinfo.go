@@ -60,6 +60,7 @@ type (
 		NodeDescription string       `json:"nodeDescription,omitempty"`
 		Private         bool         `json:"private,omitempty"`
 		Software        SoftwareMeta `json:"software,omitempty"`
+		MaxBlogs        int          `json:"maxBlogs,omitempty"`
 	}
 
 	Services struct {
