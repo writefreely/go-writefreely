@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/writeas/go-nodeinfo"
+	"github.com/writefreely/go-nodeinfo"
 	"net/http"
 )
 
@@ -14,6 +14,7 @@ func main() {
 			NodeName:        "Agora",
 			NodeDescription: "A federated something-something.",
 			Private:         false,
+			MaxBlogs:        3,
 		},
 		Protocols: []nodeinfo.NodeProtocol{
 			nodeinfo.ProtocolActivityPub,

@@ -1,9 +1,11 @@
 # go-nodeinfo
 
-[![GoDoc](https://godoc.org/github.com/writeas/go-nodeinfo?status.svg)](https://godoc.org/github.com/writeas/go-nodeinfo)
+[![GoDoc](https://godoc.org/github.com/writefreely/go-nodeinfo?status.svg)](https://godoc.org/github.com/writefreely/go-nodeinfo)
 [![Discuss on our forum](https://img.shields.io/discourse/https/discuss.write.as/users.svg?label=forum)](https://discuss.write.as/c/development)
 
 go-nodeinfo is an implementation of [NodeInfo](https://github.com/jhass/nodeinfo), a standard metadata format for federated social networks, in Go (golang).
+
+This fork contains extra metadata specifically for WriteFreely.
 
 ## Usage
 
@@ -13,7 +15,7 @@ go-nodeinfo is an implementation of [NodeInfo](https://github.com/jhass/nodeinfo
 package main
 
 import (
-	"github.com/writeas/go-nodeinfo"
+	"github.com/writefreely/go-nodeinfo"
 	"net/http"
 )
 
