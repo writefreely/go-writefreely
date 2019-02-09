@@ -26,8 +26,9 @@ type (
 
 	// CollectionParams holds values for creating a collection.
 	CollectionParams struct {
-		Alias string `json:"alias"`
-		Title string `json:"title"`
+		Alias       string `json:"alias"`
+		Title       string `json:"title"`
+		Description string `json:"description,omitempty"`
 	}
 )
 
