@@ -42,11 +42,14 @@ type (
 		Token string `json:"token,omitempty"`
 
 		// Parameters for creating or updating
-		Title    string  `json:"title,omitempty"`
-		Content  string  `json:"body,omitempty"`
-		Font     string  `json:"font,omitempty"`
-		IsRTL    *bool   `json:"rtl,omitempty"`
-		Language *string `json:"lang,omitempty"`
+		Slug     string     `json:"slug"`
+		Created  *time.Time `json:"created,omitempty"`
+		Updated  *time.Time `json:"updated,omitempty"`
+		Title    string     `json:"title,omitempty"`
+		Content  string     `json:"body,omitempty"`
+		Font     string     `json:"font,omitempty"`
+		IsRTL    *bool      `json:"rtl,omitempty"`
+		Language *string    `json:"lang,omitempty"`
 
 		// Parameters only for creating
 		Crosspost []map[string]string `json:"crosspost,omitempty"`
